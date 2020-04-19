@@ -3,27 +3,71 @@ import java.util.Scanner;
 public class CalculadoraBinarios{
     public static void main(String[] args){
         Scanner entrada = new Scanner(System.in);
-        char continuar;
+        char continuar, opcao, operacao;
+        //While que repete até o usuário não querer mais continuar
         do{
-            System.out.println("numero de bits (com bit de sinal): ");
-            int quantidadeBits = entrada.nextInt();
-            System.out.println("sinal seguido do primeiro numero:");
-            String numero1 = entrada.next();
-            System.out.println("sinal seguido do segundo numero:");
-            String numero2 = entrada.next();
-            System.out.println("Complemento de 1: "+ complementoDe1(numero1, quantidadeBits));
-            System.out.println("Complemento de 2: "+ complementoDe2(numero1, quantidadeBits));
-            System.out.println("--------------------------");
-            System.out.println("Complemento de 1: "+ complementoDe1(numero2, quantidadeBits));
-            System.out.println("Complemento de 2: "+ complementoDe2(numero2, quantidadeBits));
-            System.out.println("--------------------------");
-            System.out.println("Soma: "+ somaInteiros(numero1, numero2, quantidadeBits));
-            System.out.println("Subtracao: "+ subtracaoInteiros(numero1, numero2, quantidadeBits));
-            System.out.println("Complemento de 2 da Subtração: "+ complementoDe2(subtracaoInteiros(numero1, numero2, quantidadeBits), quantidadeBits));
-            System.out.println("Complemento de 2 da Soma: "+ complementoDe2(somaInteiros(numero1, numero2, quantidadeBits), quantidadeBits));
+            System.out.println("inteiro ou float? (i/f)");
+            opcao = entrada.next().charAt(0);
+            //Se o usuário escolher inteiros
+            if(opcao == 'i'){
+                //Pede as informações ao usuário
+                System.out.println("numero de bits (com bit de sinal): ");
+                int quantidadeBits = entrada.nextInt();
+                System.out.println("sinal seguido do primeiro numero: (+, -)");
+                String numero1 = entrada.next();
+                System.out.println("sinal seguido do segundo numero: (+, -)");
+                String numero2 = entrada.next();
+                System.out.println("operacao: (+, -, *, /)");
+                operacao = entrada.next().charAt(0);
+                //Se a operação for soma, soma os números inteiros e exibe o resultado
+                if(operacao == '+'){
+                    System.out.println("Soma: "+ somaInteiros(numero1, numero2, quantidadeBits));
+                //Se a operação for subtração, subtrai os números inteiros e exibe o resultado
+                }else if(operacao == '-'){
+                    System.out.println("Subtracao: "+ subtracaoInteiros(numero1, numero2, quantidadeBits));
+                //Se a operação for multiplicação, multiplica os números inteiros e exibe o resultado
+                }else if(operacao == '*'){
+
+                //Se a operação for divisão, divide os números inteiros e exibe o resultado
+                }else if(operacao == '/'){
+
+                }
+            //Se o usuário escolher floats
+            }else if(opcao == 'f'){
+                //Pede as informações ao usuário
+                System.out.println("sinal seguido da mantissa do primeiro numero: (+, -)");
+                String mantissa1 = entrada.next();
+                System.out.println("expoente do primeiro numero: ");
+                int expoente1 = entrada.nextInt();
+                System.out.println("sinal seguido da mantissa do segundo numero: (+, -)");
+                String mantissa2 = entrada.next();
+                System.out.println("expoente do segundo numero: ");
+                int expoente2 = entrada.nextInt();
+                System.out.println("operacao: (+, -, *, /)");
+                operacao = entrada.next().charAt(0);
+                //Se a operação for soma, soma os números inteiros e exibe o resultado
+                if(operacao == '+'){
+                
+                //Se a operação for subtração, subtrai os números inteiros e exibe o resultado
+                }else if(operacao == '-'){
+
+                //Se a operação for multiplicação, multiplica os números inteiros e exibe o resultado
+                }else if(operacao == '*'){
+
+                //Se a operação for divisão, divide os números inteiros e exibe o resultado
+                }else if(operacao == '/'){
+
+                }
+            }
+            //Se o usuário quer ou não continuar mais operações
             System.out.println("Continuar ? (s/n)");
             continuar = entrada.next().charAt(0);
         }while(continuar == 's');
+    }
+
+    //Método que realiza a soma de dois dados números binários flutuantes
+    public static String somaFlutuantes(String mantissa1, String mantissa2, int expoente1, int expoente2){
+        return "";
     }
 
     //Método que realiza a subtração de dois dados números binários inteiros
