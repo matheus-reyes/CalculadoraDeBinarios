@@ -58,6 +58,8 @@ public class CalculadoraBinarios{
                 }else if(operacao == '/'){
 
                 }
+                System.out.println("Binario 1: " + converteBinarioFlutuante(mantissa1, expoente1));
+                System.out.println("Binario 2: " + converteBinarioFlutuante(mantissa2, expoente2));
             }
             //Se o usuário quer ou não continuar mais operações
             System.out.println("Continuar ? (s/n)");
@@ -67,6 +69,8 @@ public class CalculadoraBinarios{
 
     //Método que realiza a soma de dois dados números binários flutuantes
     public static String somaFlutuantes(String mantissa1, String mantissa2, int expoente1, int expoente2){
+        
+        
         return "";
     }
 
@@ -397,5 +401,36 @@ public class CalculadoraBinarios{
         }
         //Se a soma dos números ultrapassar o limite do valor máximo dos bits, retorna true, dando overflow
         return (somadorNumero1 + somadorNumero2) > Math.pow(2, (quantidadeBits - 1));
+    }
+
+    //Método que converte para número binário com a mantissa e expoente
+    public static String converteBinarioFlutuante(String mantissa, int expoente){
+        if(expoente >= 0){
+            //Remove o ponto original da mantissa
+            mantissa = mantissa.replace(".", "");
+            //Retorna a String representando o número binário
+            String mantissaTratada = mantissa.substring(2, expoente + 2) + mantissa.substring(expoente + 2, mantissa.length());
+            //Preenche com 0 até completar 31 bits (ainda não considera o bit de sinal)
+            for(int contador = mantissaTratada.length(); contador < 23; contador++){
+                mantissaTratada += "0";
+            }
+            return mantissaTratada;
+        }else{
+            //String que representa os zeros a esquerda
+            String zeros = "";
+            //For que adiciona a quantidade de zeros a esquerda proporcional ao expoente
+            for(int contador = 1; contador < (-1 * expoente); contador++){
+                zeros += "0";
+            }
+            //Remove o ponto original da mantissa
+            mantissa = mantissa.replace(".", "");
+            //Retorna a String com as alterações feitas e eliminado o seu sinal
+            String mantissaTratada = "0" + zeros + mantissa.substring(2, mantissa.length());
+            //Preenche com 0 até completar 31 bits (ainda não considera o bit de sinal)
+            for(int contador = mantissaTratada.length(); contador < 23; contador++){
+                mantissaTratada += "0";
+            }
+            return mantissaTratada;
+        }
     }
 }
