@@ -27,7 +27,7 @@ public class CalculadoraBinarios{
                     System.out.println("Subtracao: "+ subtracaoInteiros(numero1, numero2, quantidadeBits));
                 //Se a operação for multiplicação, multiplica os números inteiros e exibe o resultado
                 }else if(operacao == '*'){
-
+                    System.out.println("Multiplicacao: "+ multiplicacaoInteiros(numero1, numero2, quantidadeBits));
                 //Se a operação for divisão, divide os números inteiros e exibe o resultado
                 }else if(operacao == '/'){
 
@@ -66,20 +66,142 @@ public class CalculadoraBinarios{
             continuar = entrada.next().charAt(0);
         }while(continuar == 's');
     }
-
-    //Método que realiza a soma de dois dados números binários flutuantes
+    
+    //Método que realiza a soma de dois números binários flutuantes
     public static String somaFlutuantes(String mantissa1, String mantissa2, int expoente1, int expoente2){
-        
-        
         return "";
+    }
+
+    //Método que realiza a divisão de dois números binários inteiros
+    public static String divisaoInteiros(String numero1, String numero2, int quantidadeBits){
+        return "";
+    }
+
+    //Método que realiza a multiplicação com algoritmo de booth de dois números binários inteiros
+    public static String multiplicacaoInteiros(String numero1, String numero2, int quantidadeBits){
+        //Tamanho dos números antes de serem alterados
+        int tamanho1 = numero1.length(); 
+        int tamanho2 = numero2.length();
+        //Guarda os sinais dos números
+        String sinal1 = "" + numero1.charAt(0);
+        String sinal2 = "" + numero2.charAt(0);
+        //Preencher com zeros a esquerda o menor número de bits
+        if(numero1.length() < numero2.length()){
+            numero1 = preencherZeros(numero1, numero2.length());
+            numero2 = preencherZeros(numero2, numero2.length());
+        }else if(numero2.length() < numero1.length()){
+            numero2 = preencherZeros(numero2, numero1.length());
+            numero1 = preencherZeros(numero1, numero1.length());
+        }
+        //Se os tamanhos forem iguais, apenas convertemos 
+        if(tamanho1 == tamanho2){
+            numero1 = converterBitSinal(numero1);
+            numero2 = converterBitSinal(numero2);
+        //Se os tamanhos forem diferentes, precisamos enviar o sinal junto com o número
+        }else{
+            numero1 = converterBitSinal(sinal1 + numero1);
+            numero2 = converterBitSinal(sinal2 + numero2);
+        }
+        // Contador que controla o algoritmo de Booth
+        int contador = numero1.length();
+        // Variáveis utilizadas no Algoritmo de Booth
+        String a = "";
+        String q = "";
+        String q2 = "";
+        String m = "";
+        String resultadoMultiplicacao = "";
+        String sinala = "";
+        String sinalm = "";
+        //Repete a operação até o contador for igual a 0
+        while(contador >= 0){
+            //a primeira passagem pelo For apenas inicializa os valores
+            if(contador == numero1.length()){
+                //a variável a começa com todos os bits valendo 0
+                for(int contador2 = 0; contador2 < numero1.length(); contador2++){
+                    a += "0";
+                }
+                // a variável q começa com com o primeiro valor em binário
+                q = numero1;
+                // a variável q2 começa com 0
+                q2 = "0";
+                // a variável m começa com o segundo valor em binário
+                m = numero2;
+            }
+            //quando o contador for igual a 0, encerramos o laço e temos o valor da multiplicação 
+            if(contador == 0){
+                resultadoMultiplicacao = a + q;
+                break;
+            }
+            //Se o último bit de q for igual a 1 e o último bit de q2 for igual a 0
+            if((q.charAt(q.length() - 1) == '1' && q2.charAt(q2.length() - 1) == '1') || (q.charAt(q.length() - 1) == '0' && q2.charAt(q2.length() - 1) == '0')){
+                //Depois, o primeiro bit de a se duplica, e o último bit de a é transportado
+                String ultimoBita = "" + a.charAt(a.length() - 1);
+                a = a.charAt(0) + a.substring(0, a.length() - 1);
+                //o último bit de a é transportado para q e armazenamos seu último bit
+                String ultimoBitq = "" + q.charAt(q.length() - 1);
+                q = ultimoBita + q.substring(0, q.length() - 1);
+                //o último bit de q é transportado para q2
+                q2 = ultimoBitq;
+            //Se o último bit de q for igual a 1 e o último bit de q2 for igual a 0
+            }else if(q.charAt(q.length() - 1) == '1' && q2.charAt(q2.length() - 1) == '0'){
+                //recebe o sinal de a
+                if(a.charAt(0) == '0'){
+                    sinala = "+";
+                }else if(a.charAt(0) == '1'){
+                    sinala = "-";
+                }
+                //recebe o sinal de m
+                if(m.charAt(0) == '0'){
+                    sinalm = "+";
+                }else if(m.charAt(0) == '1'){
+                    sinalm = "-";
+                }
+                //Nesse caso, efetuamos a subtração de A e M e o resultado é recebido por A
+                a = subtracaoInteiros(sinala + a.substring(1, a.length()), sinalm + m.substring(1, m.length()), m.length() + 1);
+                a = a.substring(a.length() - m.length(), a.length());
+                //Depois, o primeiro bit de a se duplica, e o último bit de a é transportado
+                String ultimoBita = "" + a.charAt(a.length() - 1);
+                a = a.charAt(0) + a.substring(0, a.length() - 1);
+                //o último bit de a é transportado para q e armazenamos seu último bit
+                String ultimoBitq = "" + q.charAt(q.length() - 1);
+                q = ultimoBita + q.substring(0, q.length() - 1);
+                //o último bit de q é transportado para q2
+                q2 = ultimoBitq;
+            //Se o último bit de q for igual a 0 e o último bit de q2 for igual a 1
+            }else if(q.charAt(q.length() - 1) == '0' && q2.charAt(q2.length() - 1) == '1'){
+                //recebe o sinal de a
+                if(a.charAt(0) == '0'){
+                    sinala = "+";
+                }else if(a.charAt(0) == '1'){
+                    sinala = "-";
+                }
+                //recebe o sinal de m
+                if(m.charAt(0) == '0'){
+                    sinalm = "+";
+                }else if(m.charAt(0) == '1'){
+                    sinalm = "-";
+                }
+                //Nesse caso, efetuamos a soma de A e M e o resultado é recebido por A
+                a = somaInteiros(sinala + a.substring(1, a.length()), sinalm + m.substring(1, m.length()), m.length() + 1);
+                a = a.substring(a.length() - m.length(), a.length());
+                //Depois, o primeiro bit de a se duplica, e o último bit de a é transportado
+                String ultimoBita = "" + a.charAt(a.length() - 1);
+                a = a.charAt(0) + a.substring(0, a.length() - 1);
+                //o último bit de a é transportado para q e armazenamos seu último bit
+                String ultimoBitq = ""+ q.charAt(q.length() - 1);
+                q = ultimoBita + q.substring(0, q.length() - 1);
+                //o último bit de q é transportado para q2
+                q2 = ultimoBitq;
+            }
+            //Depois desses passos, decrementamos o nosso contador
+            contador--;
+        }
+        
+        return resultadoMultiplicacao;
     }
 
     //Método que realiza a subtração de dois dados números binários inteiros
     public static String subtracaoInteiros(String numero1, String numero2, int quantidadeBits) {
-        //Verifica se deu overflow
-        if(verificaOverflow(numero1, numero2, quantidadeBits)){
-            return "overflow!";
-        }
         //String que armazenará o resultado da subtracao, como usamos concatenação o resultado ficará invertido
         String resultadoSubtracaoInvertido = "";
         //Boolean que armazenará uma representação se houve ou não transporte
@@ -132,7 +254,7 @@ public class CalculadoraBinarios{
         for(int contador = (resultadoSubtracaoInvertido.length() - 1); contador >= 0; contador--){
             resultadoSubtracao += resultadoSubtracaoInvertido.charAt(contador);
         }
-        
+
         // Se apenas o primeiro número for negativo e ele for maior que o segundo, o resultado será negativo, então o bit de sinal é 1
         if(numero1NaoTratado.charAt(0) == '-' && numero2NaoTratado.charAt(0) == '+'){
             //uma subtração com um número positivo dá um número negativo, retornando uma soma de negativos
@@ -151,7 +273,7 @@ public class CalculadoraBinarios{
         // Compara qual o sinal do maior, o sinal do maior permanece no resultado
         }else if(numero1NaoTratado.charAt(0) == '+' && numero2NaoTratado.charAt(0) == '+' && verificaMaior(numero1NaoTratado, numero2NaoTratado)){
             resultadoSubtracao = "0" + resultadoSubtracao;
-        }else if(numero1NaoTratado.charAt(0) == '+' && numero2NaoTratado.charAt(0) == '+' && verificaMaior(numero1NaoTratado, numero2NaoTratado)){
+        }else if(numero1NaoTratado.charAt(0) == '+' && numero2NaoTratado.charAt(0) == '+' && verificaMaior(numero2NaoTratado, numero1NaoTratado)){
             resultadoSubtracao = "1" + resultadoSubtracao;
         }
 
@@ -161,10 +283,6 @@ public class CalculadoraBinarios{
 
     //Método que realiza a soma de dois dados números binários inteiros
     public static String somaInteiros(String numero1, String numero2, int quantidadeBits) {
-        //Verifica se deu overflow
-        if(verificaOverflow(numero1, numero2, quantidadeBits)){
-            return "overflow!";
-        }
         //String que armazenará o resultado da soma, como usamos concatenação o resultado ficará invertido
         String resultadoSomaInvertido = "";
         //Boolean que armazenará uma representação se houve ou não transporte
@@ -236,7 +354,6 @@ public class CalculadoraBinarios{
         for(int contador = (resultadoSomaInvertido.length() - 1); contador >= 0; contador--){
             resultadoSoma += resultadoSomaInvertido.charAt(contador);
         }
-        
         // Se apenas o primeiro número for negativo e ele for maior que o segundo, o resultado será negativo, então o bit de sinal é 1
         if(numero1NaoTratado.charAt(0) == '-' && numero2NaoTratado.charAt(0) == '+' && verificaMaior(numero1NaoTratado, numero2NaoTratado)){
             resultadoSoma = "1" + resultadoSoma;
@@ -246,7 +363,10 @@ public class CalculadoraBinarios{
         // Se os dois números forem negativos, efetuamos a soma o mantemos o sinal de negativo
         }else if(numero1NaoTratado.charAt(0) == '-' && numero2NaoTratado.charAt(0) == '-'){
             resultadoSoma = "1" + resultadoSoma;
-        // Os outros casos são positivos, então o bit de sinal é 0
+        // Se o primeiro número for negativo e menor que o segundo, é realizada a subtração
+        }else if(numero1NaoTratado.charAt(0) == '-' && numero2NaoTratado.charAt(0) == '+' && verificaMaior(numero2NaoTratado, numero1NaoTratado)){
+            resultadoSoma = "0" + subtracaoInteiros(numero2, numero1, quantidadeBits);
+            // Os outros casos são positivos, então o bit de sinal é 0
         }else{
             resultadoSoma = "0" + resultadoSoma;
         }
@@ -432,5 +552,18 @@ public class CalculadoraBinarios{
             }
             return mantissaTratada;
         }
+    }
+
+    //Método que converte o sinal em bit de sinal e deixa o número de bits igual
+    public static String converterBitSinal(String numero){
+        //Se o sinal é +, o bit de sinal é 0
+        if(numero.charAt(0) == '+'){
+            return numero.replace("+", "0");
+        //Se o sinal é -, o bit de sinal é 1
+        }else if(numero.charAt(0) == '-'){
+            return numero.replace("-", "1");
+        }
+        //Possível Erro de Digitação
+        return "";
     }
 }
