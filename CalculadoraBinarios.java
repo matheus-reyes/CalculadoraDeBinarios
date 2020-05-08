@@ -30,7 +30,7 @@ public class CalculadoraBinarios{
                     System.out.println("Multiplicacao: "+ FuncoesInteiros.multiplicacaoInteiros(numero1, numero2, quantidadeBits));
                 //Se a operação for divisão, divide os números inteiros e exibe o resultado
                 }else if(operacao == '/'){
-
+                    System.out.println("divisao: "+ FuncoesInteiros.divisaoInteiros(numero1, numero2, quantidadeBits));
                 }
             //Se o usuário escolher floats
             }else if(opcao == 'f'){

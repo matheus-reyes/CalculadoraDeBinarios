@@ -1,6 +1,103 @@
 
 public class FuncoesInteiros {
     
+    //Método que realiza a divisão de dois números binários inteiros
+    public static String divisaoInteiros(String numero1, String numero2, int quantidadeBits){
+        //Guarda os sinais dos números
+        String sinal1 = "" + numero1.charAt(0);
+        String sinal2 = "" + numero2.charAt(0);
+        //Variáveis que representarão o divisor e o dividendo
+        String divisor = "";
+        String dividendo = "";
+
+        //Substitui o sinal do dividendo pelo bit de sinal de acordo com cada situação
+        if(numero1.charAt(0) == '+'){
+            dividendo = numero1.replace('+', '0');
+        }else if(numero1.charAt(0) == '-'){
+            dividendo = numero1.replace('-', '1');
+        }
+
+        //Substitui o sinal do divisor pelo bit de sinal de acordo com cada situação
+        if(numero2.charAt(0) == '+'){
+            divisor = numero2.replace('+', '0');
+        }else if(numero2.charAt(0) == '-'){
+            divisor = numero2.replace('-', '1');
+        }
+        
+        //Contador que fará o controle do número de loops na divisão
+        int contador = 0;
+        //Variáveis que serão utilizadas na divisão, a representará o resto e q o resultado da divisão
+        String a = "";
+        String q = "";
+        String m = "";
+
+        //Variáveis que receberão os sinais de a e m
+        String sinala = "";
+        String sinalm = "";
+
+        while(contador < numero1.length()){
+
+            //No primeiro loop, inicializamos as variáveis
+            if(contador == 0){ 
+
+                //a variável a começa com todos os bits valendo 0
+                for(int contador2 = 0; contador2 < numero1.length(); contador2++){
+                    a += "0";
+                }
+                //a variável q recebe o dividendo
+                q = dividendo;
+                //a variável m recebe o complemento de 2 do divisor, como a função de complemento de 2 espera o sinal, devemos passa-lo também
+                m = FuncoesAuxiliares.complementoDe2(sinal2 + divisor, divisor.length() + 1);
+            }
+
+            //Armazena o primeiro bit de q, ele será transportado para a
+            String primeiroBitq = "" + q.charAt(0);
+            //Elimina o primeiro bit de q e coloca o bit 0 no final
+            q = q.substring(1, q.length()) + "0";
+            //Elimina o primeiro bit de a e coloca o primeiro bit de q no final
+            a = a.substring(1, a.length()) + primeiroBitq;
+            //Armazena o valor de a depois do deslocamento no caso de restauração
+            String restauracaoa = a;
+
+            //Como utilizaremos a função de soma e ela recebe o sinal como primeiro caracter, precisamos fazer a conversão para a 
+            if(a.charAt(0) == '1'){
+                sinala = "-";
+            }else if(a.charAt(0) == '0'){
+                sinala = "+";
+            }
+
+            //Como utilizaremos a função de soma e ela recebe o sinal como primeiro caracter, precisamos fazer a conversão para m
+            if(m.charAt(0) == '1'){
+                sinalm = "-";
+            }else if(m.charAt(0) == '0'){
+                sinalm = "+";
+            }
+
+            //realizamos a soma de a e m
+            a = somaInteiros(sinala + a.substring(1, a.length()), sinalm + m.substring(1, m.length()), a.length(), "divisao");
+
+            //Se o primeiro bit de a for 1
+            if(a.charAt(0) == '1'){
+                //Restauramos o valor de a
+                a = restauracaoa;
+                //q recebe na sua última posição o bit 0
+                q = q.substring(0, q.length() - 1) + "0";
+
+            //Se o primeiro bit de a for 0
+            }else if(a.charAt(0) == '0'){
+                //q recebe na sua última posição o bit 1
+                q = q.substring(0, q.length() - 1) + "1";
+            }
+
+            contador++;
+        }
+
+        //a é o resto e q o resultado da soma
+        System.out.println("Resto: "+a);
+        return q;
+
+    }
+    
     //Método que realiza a multiplicação com algoritmo de booth de dois números binários inteiros
     public static String multiplicacaoInteiros(String numero1, String numero2, int quantidadeBits){
         //Tamanho dos números antes de serem alterados
@@ -187,16 +284,16 @@ public class FuncoesInteiros {
 
         //Se os valores vierem direto do algoritmo de booth, os valores já vão estar em complemento de 2
         //Então apenas mudamos o bit de sinal
-        if(origem.equals("multiplicacao") && numero1NaoTratado.charAt(0) == '-'){
+        if((origem.equals("multiplicacao") || origem.equals("divisao")) && numero1NaoTratado.charAt(0) == '-'){
             numero1 = numero1NaoTratado.replace('-', '1');
         }
-        if(origem.equals("multiplicacao") && numero1NaoTratado.charAt(0) == '+'){
+        if((origem.equals("multiplicacao") || origem.equals("divisao")) && numero1NaoTratado.charAt(0) == '+'){
             numero1 = numero1NaoTratado.replace('+', '0');
         }
-        if(origem.equals("multiplicacao") && numero2NaoTratado.charAt(0) == '-'){
+        if((origem.equals("multiplicacao") || origem.equals("divisao")) && numero2NaoTratado.charAt(0) == '-'){
             numero2 = numero2NaoTratado.replace('-', '1');
         }
-        if(origem.equals("multiplicacao") && numero2NaoTratado.charAt(0) == '+'){
+        if((origem.equals("multiplicacao") || origem.equals("divisao")) && numero2NaoTratado.charAt(0) == '+'){
             numero2 = numero2NaoTratado.replace('+', '0');
         }
 
