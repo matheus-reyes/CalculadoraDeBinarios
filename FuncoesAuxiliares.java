@@ -1,5 +1,77 @@
 public class FuncoesAuxiliares {
     
+    //Método que recebe um número em binário e o converte para decimal
+    public static int converteDecimal(String numero){
+        // somador armazena o número em decimal, somando em cada bit
+        int somador = 0;
+        // expoente armazena o expoente de cada bit
+        int expoente = 0;
+        //For que calcula em decimal o número binário
+        for(int contador = (numero.length() - 1); contador >= 0; contador--){
+            //Se o bit for 1, então faz 2 elevado ao expoente e soma no somador
+            if(numero.charAt(contador) == '1'){
+                somador += Math.pow(2, expoente);
+            }
+            //Aumenta o expoente a cada bit
+            expoente++;
+        }
+        //Retorna o número convertido em decimal
+        return somador;
+    }
+
+    //Método que recebe um número em decimal e o converte para binário
+    public static String converteBinario(int numero, int quantidadeBits){
+        //Variável que armazenará o número em binário invertido
+        String numeroBinarioInvertido = "";
+        //Variável que armazenará o número em binário
+        String numeroBinario = "";
+
+        //While que percorrerá o número até o resultado for 1
+        do{
+            //Caso o número a ser convertido for 0, não precisamos percorrer o loop
+            if(numero == 0){
+                break;
+            }
+
+            //Condição de parada, quando o número for igual a 1
+            if(numero == 1){
+                numeroBinarioInvertido += "1";
+                break;
+            
+            //Se o resto da divisão for 1, o bit é 1 e o número recebe o resultado da divisão
+            }else if(numero % 2 == 1){
+                numero = numero / 2;
+                numeroBinarioInvertido += "1";
+
+            //Se o resto da divisão for 0, o bit é 0 e o número recebe o resultado da divisão
+            }else if(numero % 2 == 0){
+                numero = numero / 2;
+                numeroBinarioInvertido += "0";
+            }
+
+        }while(true);
+
+        //Como o número é invertido, precisamos desinverter
+        for(int contador = (numeroBinarioInvertido.length() - 1); contador >= 0; contador--){
+            
+            //recebe a string desinvertida
+            numeroBinario += numeroBinarioInvertido.charAt(contador);
+        }
+
+        //Variável que armazenará os zeros
+        String zeros = "";
+
+        //Completa com bits a esquerda de acordo com o número de bits informado
+        for(int contador = 0; contador < quantidadeBits - numeroBinario.length(); contador++){
+            
+            //recebe a string desinvertida
+            zeros += "0";
+        }
+
+        //Retorna o número convertido em binário
+        return zeros + numeroBinario;
+    }
+    
     //Método que realiza o complemento de 2 de um dado número binário
     public static String complementoDe2(String numero, int quantidadeBits){
         //String que representa o número 1 na hora de somar o número para fazer o complemento de 2

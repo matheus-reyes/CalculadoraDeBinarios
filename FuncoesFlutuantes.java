@@ -79,9 +79,6 @@ public class FuncoesFlutuantes {
         String numero1Completo = inteiroNumero1 + decimalNumero1;
         String numero2Completo = inteiroNumero2 + decimalNumero2;
 
-        System.out.println(numero1Completo);
-        System.out.println(numero2Completo);
-
         //A multiplicação com flutuantes pode ser feita da mesma forma que a de inteiros, mas precisamos ter cuidado com os decimais
 
         //Armazena o resultado da multiplicação dos números, como se fossem números inteiros

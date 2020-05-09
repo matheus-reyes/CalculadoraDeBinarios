@@ -9,19 +9,40 @@ public class FuncoesInteiros {
         //Variáveis que representarão o divisor e o dividendo
         String divisor = "";
         String dividendo = "";
-
-        //Substitui o sinal do dividendo pelo bit de sinal de acordo com cada situação
-        if(numero1.charAt(0) == '+'){
+        //Variável que identifica se está sendo realizada divisão por 0
+        boolean divisaopor0 = true;
+        //For que percorre o divisor e verifica se há pelo menos um bit ligado para prosseguir com a divisão
+        for(int contador = 0; contador < numero2.length(); contador++){
+            if(numero2.charAt(contador) == '1'){
+                divisaopor0 = false;
+            }
+        }
+        //Se não for identificado nenhum bit ligado, é uma divisão por 0 que deve ser negada
+        if(divisaopor0 == true){
+            return "divisao por 0 detectada";
+        }
+        //Preencher com zeros a esquerda o menor número de bits
+        if(numero1.length() < numero2.length()){
+            numero1 = sinal1 + FuncoesAuxiliares.preencherZeros(numero1, numero2.length());
+            numero2 = sinal2 + FuncoesAuxiliares.preencherZeros(numero2, numero2.length());
+        }else if(numero2.length() < numero1.length()){
+            numero2 = sinal2 + FuncoesAuxiliares.preencherZeros(numero2, numero1.length());
+            numero1 = sinal1 + FuncoesAuxiliares.preencherZeros(numero1, numero1.length());
+        }
+        //O Algoritmo parte de que os números são positivos, trataremos casos negativos mais a frente
+        //Logo, não importando o sinal, substituimos o sinal pelo bit de sinal 0
+        if(sinal1.equals("+")){
             dividendo = numero1.replace('+', '0');
-        }else if(numero1.charAt(0) == '-'){
-            dividendo = numero1.replace('-', '1');
+        }else if(sinal1.equals("-")){
+            dividendo = numero1.replace('-', '0');
         }
 
-        //Substitui o sinal do divisor pelo bit de sinal de acordo com cada situação
-        if(numero2.charAt(0) == '+'){
+        //O Algoritmo parte de que os números são positivos, trataremos casos negativos mais a frente
+        //Logo, não importando o sinal, substituimos o sinal pelo bit de sinal 0
+        if(sinal2.equals("+")){
             divisor = numero2.replace('+', '0');
-        }else if(numero2.charAt(0) == '-'){
-            divisor = numero2.replace('-', '1');
+        }else if(sinal2.equals("-")){
+            divisor = numero2.replace('-', '0');
         }
         
         //Contador que fará o controle do número de loops na divisão
@@ -92,10 +113,55 @@ public class FuncoesInteiros {
             contador++;
         }
 
-        //a é o resto e q o resultado da soma
-        System.out.println("Resto: "+a);
-        return q;
+        //Com o resultado positivo, iremos analisar os casos negativos, caso os números forem negativos
+        //Segundo Stallings, temos a equação D = Q * V + R, onde D é o dividendo, Q o quociente, V o divisor e R o resto
+        //Para podermos aplicar os números nas equações, precisamos converte-los para decimal
+        int qinteiro = FuncoesAuxiliares.converteDecimal(q);
+        int rinteiro = FuncoesAuxiliares.converteDecimal(a);
+        int dinteiro = FuncoesAuxiliares.converteDecimal(dividendo);
+        int vinteiro = FuncoesAuxiliares.converteDecimal(divisor);
 
+        //Isolando a equação para termos o resto, temos que R = D - (Q * V), logo:
+        rinteiro = dinteiro - (qinteiro * vinteiro);
+
+        //Isolando a equação para termos o quociente, temos que Q = (D - R) / V, logo:
+        qinteiro = (dinteiro - rinteiro) / vinteiro;
+
+        //Caso o dividendo seja positivo e o divisor negativo, teremos que o quociente será negativo
+        if(sinal1.equals("+") && sinal2.equals("-")){
+            qinteiro = -1 * qinteiro;
+        
+        //Caso o dividendo seja negativo e o divisor positivo, teremos que o quociente e o resto serão negativos
+        }else if(sinal1.equals("-") && sinal2.equals("+")){
+            qinteiro = -1 * qinteiro;
+            rinteiro = -1 * rinteiro;
+        
+        //Caso o dividendo seja negativo e o divisor negativo, teremos que o resto será negativo
+        }else if(sinal1.equals("-") && sinal2.equals("-")){
+            rinteiro = -1 * rinteiro;
+        }
+
+        //Temos o resto e o quociente em números decimais, então precisamos converte-los para binário, passando o valor absoluto (positivo)
+        String resto = FuncoesAuxiliares.converteBinario(Math.abs(rinteiro), a.length());
+        String resultadoDivisao = FuncoesAuxiliares.converteBinario(Math.abs(qinteiro), q.length());
+
+        //Se o resto for negativo, precisamos tirar seu complemento de 2
+        if(rinteiro < 0){
+            //Como a função de complemento de 2 espera um sinal, precisamos passá-lo junto com o número em si
+            resto = FuncoesAuxiliares.complementoDe2("-" + resto, resto.length() + 1);
+        }
+
+        //Se o quociente for negativo, precisamos tirar seu complemento de 2
+        if(qinteiro < 0){
+            //Como a função de complemento de 2 espera um sinal, precisamos passá-lo junto com o número em si
+            resultadoDivisao = FuncoesAuxiliares.complementoDe2("-" + resultadoDivisao, resultadoDivisao.length() + 1);
+        }
+
+        //Exibe o resto da divisão
+        System.out.println("Resto: " + resto);
+
+        //Retorna o resultado da divisão
+        return resultadoDivisao;
     }
     
     //Método que realiza a multiplicação com algoritmo de booth de dois números binários inteiros

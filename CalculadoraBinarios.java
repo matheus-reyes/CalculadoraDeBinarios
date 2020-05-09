@@ -43,7 +43,7 @@ public class CalculadoraBinarios{
                 String mantissa2 = entrada.next();
                 System.out.println("expoente do segundo numero: ");
                 String expoente2 = entrada.next();
-                System.out.println("operacao: (+, -, *, /)");
+                System.out.println("operacao: (+, -, *)");
                 operacao = entrada.next().charAt(0);
                 //Se a operação for soma, soma os números inteiros e exibe o resultado
                 if(operacao == '+'){
@@ -54,9 +54,6 @@ public class CalculadoraBinarios{
                 //Se a operação for multiplicação, multiplica os números inteiros e exibe o resultado
                 }else if(operacao == '*'){
                     System.out.println("Multiplicacao: " + FuncoesFlutuantes.multiplicacaoFlutuantes(mantissa1, mantissa2, expoente1, expoente2));
-                //Se a operação for divisão, divide os números inteiros e exibe o resultado
-                }else if(operacao == '/'){
-
                 }
             }
             //Se o usuário quer ou não continuar mais operações
