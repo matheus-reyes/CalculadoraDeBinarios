@@ -6,6 +6,9 @@ public class FuncoesInteiros {
         //Guarda os sinais dos números
         String sinal1 = "" + numero1.charAt(0);
         String sinal2 = "" + numero2.charAt(0);
+        //Tamanhos dos dois números
+        int tamanho1 = numero1.length();
+        int tamanho2 = numero2.length();
         //Variáveis que representarão o divisor e o dividendo
         String divisor = "";
         String dividendo = "";
@@ -21,14 +24,33 @@ public class FuncoesInteiros {
         if(divisaopor0 == true){
             return "divisao por 0 detectada";
         }
-        //Preencher com zeros a esquerda o menor número de bits
-        if(numero1.length() < numero2.length()){
-            numero1 = sinal1 + FuncoesAuxiliares.preencherZeros(numero1, numero2.length());
-            numero2 = sinal2 + FuncoesAuxiliares.preencherZeros(numero2, numero2.length());
-        }else if(numero2.length() < numero1.length()){
-            numero2 = sinal2 + FuncoesAuxiliares.preencherZeros(numero2, numero1.length());
-            numero1 = sinal1 + FuncoesAuxiliares.preencherZeros(numero1, numero1.length());
+
+        //A quantidade de Bits na divisão é a mesma que a do maior valor informado
+        //Caso a quantidade de bits informada for menor que a do número com maior bit, o overflow é informado
+        
+        //Caso o segundo número for maior que o segundo, usamos ele como comparação
+        if(tamanho1 < tamanho2){
+            if(tamanho2 > quantidadeBits){
+                return "Overflow";
+            }
+        
+        //Caso o primeiro número for maior que o segundo, usamos ele como comparação
+        }else if(tamanho2 < tamanho1){
+            if(tamanho1 > quantidadeBits){
+                return "Overflow";
+            }
+        
+        //Caso os dois números forem iguais, podemos usar qualquer um dos números como comparação
+        }else{
+            if(tamanho1 > quantidadeBits){
+                return "Overflow";
+            }
         }
+
+        //Precisamos deixar os dois números padronizados, com o mesmo número de bits, usamos a quantidade informada pelo usuário para isso
+        numero1 = sinal1 + FuncoesAuxiliares.preencherZeros(numero1, quantidadeBits);
+        numero2 = sinal2 + FuncoesAuxiliares.preencherZeros(numero2, quantidadeBits);
+
         //O Algoritmo parte de que os números são positivos, trataremos casos negativos mais a frente
         //Logo, não importando o sinal, substituimos o sinal pelo bit de sinal 0
         if(sinal1.equals("+")){
@@ -56,13 +78,13 @@ public class FuncoesInteiros {
         String sinala = "";
         String sinalm = "";
 
-        while(contador < numero1.length()){
+        while(contador < quantidadeBits){
 
             //No primeiro loop, inicializamos as variáveis
             if(contador == 0){ 
 
                 //a variável a começa com todos os bits valendo 0
-                for(int contador2 = 0; contador2 < numero1.length(); contador2++){
+                for(int contador2 = 0; contador2 < quantidadeBits; contador2++){
                     a += "0";
                 }
                 //a variável q recebe o dividendo
@@ -96,6 +118,11 @@ public class FuncoesInteiros {
 
             //realizamos a soma de a e m
             a = somaInteiros(sinala + a.substring(1, a.length()), sinalm + m.substring(1, m.length()), a.length(), "divisao");
+
+            //Se o retorno da soma for igual a Overflow, então o resultado da divisão também é overflow, precisamos de mais bits para a divisão
+            if(a.equals("Overflow!")){
+                return "Overflow!";
+            }
 
             //Se o primeiro bit de a for 1
             if(a.charAt(0) == '1'){
