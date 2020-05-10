@@ -172,25 +172,40 @@ public class FuncoesInteiros {
         //Guarda os sinais dos números
         String sinal1 = "" + numero1.charAt(0);
         String sinal2 = "" + numero2.charAt(0);
-        //Preencher com zeros a esquerda o menor número de bits
-        if(numero1.length() < numero2.length()){
-            numero1 = FuncoesAuxiliares.preencherZeros(numero1, numero2.length());
-            numero2 = FuncoesAuxiliares.preencherZeros(numero2, numero2.length());
-        }else if(numero2.length() < numero1.length()){
-            numero2 = FuncoesAuxiliares.preencherZeros(numero2, numero1.length());
-            numero1 = FuncoesAuxiliares.preencherZeros(numero1, numero1.length());
-        }
-        //Se os tamanhos forem iguais, apenas convertemos 
-        if(tamanho1 == tamanho2){
-            numero1 = FuncoesAuxiliares.converterBitSinal(numero1);
-            numero2 = FuncoesAuxiliares.converterBitSinal(numero2);
-        //Se os tamanhos forem diferentes, precisamos enviar o sinal junto com o número
+
+        //A quantidade de Bits retornada no algoritmo de booth é o dobro da quantidade de bits do maior número
+        //Caso a quantidade de bits informada for menor que o dobro do maior número, retornamos Overflow
+        
+        //Caso o segundo número for maior que o segundo, usamos ele como comparação
+        if(tamanho1 < tamanho2){
+            if((tamanho2 * 2) > quantidadeBits){
+                return "Overflow";
+            }
+        
+        //Caso o primeiro número for maior que o segundo, usamos ele como comparação
+        }else if(tamanho2 < tamanho1){
+            if((tamanho1 * 2) > quantidadeBits){
+                return "Overflow";
+            }
+        
+        //Caso os dois números forem iguais, podemos usar qualquer um dos números como comparação
         }else{
-            numero1 = FuncoesAuxiliares.converterBitSinal(sinal1 + numero1);
-            numero2 = FuncoesAuxiliares.converterBitSinal(sinal2 + numero2);
+            if((tamanho1 * 2) > quantidadeBits){
+                return "Overflow";
+            }
         }
+
+        //O Algoritmo de Booth pressupõe que os dois valores multiplicados possuem o mesmo número de bits
+        //Então, padronizamos os dois números de bits com a metade do valor informado
+        numero1 = FuncoesAuxiliares.preencherZeros(numero1, (quantidadeBits / 2));
+        numero2 = FuncoesAuxiliares.preencherZeros(numero2, (quantidadeBits / 2));
+
+        //Precisamos converter os sinais dos dois números para bits de sinal
+        numero1 = FuncoesAuxiliares.converterBitSinal(sinal1 + numero1);
+        numero2 = FuncoesAuxiliares.converterBitSinal(sinal2 + numero2);
+   
         // Contador que controla o algoritmo de Booth
-        int contador = numero1.length();
+        int contador = quantidadeBits / 2;
         // Variáveis utilizadas no Algoritmo de Booth
         String a = "";
         String q = "";
@@ -202,9 +217,9 @@ public class FuncoesInteiros {
         //Repete a operação até o contador for igual a 0
         while(contador >= 0){
             //a primeira passagem pelo For apenas inicializa os valores
-            if(contador == numero1.length()){
+            if(contador == quantidadeBits / 2){
                 //a variável a começa com todos os bits valendo 0
-                for(int contador2 = 0; contador2 < numero1.length(); contador2++){
+                for(int contador2 = 0; contador2 < quantidadeBits / 2; contador2++){
                     a += "0";
                 }
                 // a variável q começa com com o primeiro valor em binário
@@ -248,7 +263,13 @@ public class FuncoesInteiros {
                 }
 
                 //Nesse caso, efetuamos a subtração de A e M e o resultado é recebido por A
-                a = subtracaoInteiros(sinala + a.substring(1, a.length()), sinalm + m.substring(1, m.length()), m.length());
+                a = subtracaoInteiros(sinala + a.substring(1, a.length()), sinalm + m.substring(1, m.length()), (quantidadeBits / 2));
+
+                //Se o retorno da subtração for igual a Overflow, então o resultado da multiplicação também é overflow, precisamos de mais bits para a multiplicação
+                if(a.equals("Overflow!")){
+                    return "Overflow!";
+                }
+                
                 a = a.substring(a.length() - m.length(), a.length());
                 //Depois, o primeiro bit de a se duplica, e o último bit de a é transportado
                 String ultimoBita = "" + a.charAt(a.length() - 1);
@@ -274,7 +295,13 @@ public class FuncoesInteiros {
                 }
                 
                 //Nesse caso, efetuamos a soma de A e M e o resultado é recebido por A
-                a = somaInteiros(sinala + a.substring(1, a.length()), sinalm + m.substring(1, m.length()), m.length(), "multiplicacao");
+                a = somaInteiros(sinala + a.substring(1, a.length()), sinalm + m.substring(1, m.length()), (quantidadeBits / 2), "multiplicacao");
+
+                //Se o retorno da soma for igual a Overflow, então o resultado da multiplicação também é overflow, precisamos de mais bits para a multiplicação
+                if(a.equals("Overflow!")){
+                    return "Overflow!";
+                }
+
                 a = a.substring(a.length() - m.length(), a.length());
                 //Depois, o primeiro bit de a se duplica, e o último bit de a é transportado
                 String ultimoBita = "" + a.charAt(a.length() - 1);
