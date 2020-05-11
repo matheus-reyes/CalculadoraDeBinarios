@@ -222,7 +222,7 @@ public class FuncoesAuxiliares {
             //Remove o ponto original da mantissa
             mantissa = mantissa.replace(".", "");
             //Retorna a String com as alterações feitas
-            String mantissaTratada = sinal + zeros + "." + mantissa.substring(1, mantissa.length());
+            String mantissaTratada = sinal + zeros.charAt(0) + "." + zeros.substring(1, zeros.length()) + mantissa.substring(1, mantissa.length());
             //Preenche com 0 até completar 31 bits (ainda não considera o bit de sinal)
             for(int contador = mantissaTratada.length(); contador < 33; contador++){
                 mantissaTratada += "0";

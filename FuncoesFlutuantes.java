@@ -82,7 +82,18 @@ public class FuncoesFlutuantes {
         //A multiplicação com flutuantes pode ser feita da mesma forma que a de inteiros, mas precisamos ter cuidado com os decimais
 
         //Armazena o resultado da multiplicação dos números, como se fossem números inteiros
-        String multiplicacao = FuncoesInteiros.multiplicacaoInteiros(sinal1 + numero1Completo, sinal2 + numero2Completo, (numero1Completo.length() + numero2Completo.length()));
+        String multiplicacao = FuncoesInteiros.multiplicacaoInteiros(sinal1 + numero1Completo, sinal2 + numero2Completo, (numero1Completo.length() + numero2Completo.length() + 2));
+        
+        //Se o expoente for maior que 128, retorna Overflow
+        if(((multiplicacao.length() - decimalNumero1.length()) - 2) > 127){
+            return "Overflow!";
+        }
+
+        //Como no caso de números pequenos o expoente é 0, usamos o tamanho do resultado para comparação
+        //caso o tamanho for maior que 127, retorna Underflow!
+        if(multiplicacao.length() > 127){
+            return "Underflow!";
+        }
         
         //Retorna o resultado da multiplicação formatado, colocando o expoente da maneira correta
         return multiplicacao.substring(0,2) + "." + multiplicacao.substring(2, multiplicacao.length()) + " * 2 ^ " + ((multiplicacao.length() - (decimalNumero1.length() * 2)) - 2);
@@ -273,6 +284,17 @@ public class FuncoesFlutuantes {
         //For que desinverte a String
         for(int contador = (resultadoSomaInvertido.length() - 1); contador >= 0; contador--){
             resultadoSoma += resultadoSomaInvertido.charAt(contador);
+        }
+
+        //Se o expoente for maior que 128, retorna Overflow
+        if(((resultadoSoma.length() - decimalNumero1.length()) - 2) > 127){
+            return "Overflow!";
+        }
+
+        //Como no caso de números pequenos o expoente é 0, usamos o tamanho do resultado para comparação
+        //caso o tamanho for maior que 127, retorna Underflow!
+        if(resultadoSoma.length() > 127){
+            return "Underflow!";
         }
 
         //Retorna o resultado da soma, com bit de sinal e representação em ponto flutuante
