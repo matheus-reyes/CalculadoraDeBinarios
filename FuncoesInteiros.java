@@ -227,10 +227,20 @@ public class FuncoesInteiros {
         numero1 = FuncoesAuxiliares.preencherZeros(numero1, (quantidadeBits / 2));
         numero2 = FuncoesAuxiliares.preencherZeros(numero2, (quantidadeBits / 2));
 
-        //Precisamos converter os sinais dos dois números para bits de sinal
-        numero1 = FuncoesAuxiliares.converterBitSinal(sinal1 + numero1);
-        numero2 = FuncoesAuxiliares.converterBitSinal(sinal2 + numero2);
-   
+        //Precisamos converter os sinais dos dois números para bits de sinal, nesse momento consideramos 
+        //Que os números são positivos, depois tiramos complemento de 2 caso necessário
+        numero1 = FuncoesAuxiliares.converterBitSinal("+" + numero1);
+        numero2 = FuncoesAuxiliares.converterBitSinal("+" + numero2);
+
+        //Se um dos números for negativo, precisamos tirar o complemento de 2 deles
+        if(sinal1.equals("-")){
+            numero1 = FuncoesAuxiliares.complementoDe2(sinal1 + numero1, numero1.length() + 1);
+        }
+
+        if(sinal2.equals("-")){
+            numero2 = FuncoesAuxiliares.complementoDe2(sinal2 + numero2, numero2.length() + 1);
+        }
+        
         // Contador que controla o algoritmo de Booth
         int contador = quantidadeBits / 2;
         // Variáveis utilizadas no Algoritmo de Booth
